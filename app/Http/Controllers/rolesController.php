@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\roles;
+use Illuminate\Support\Facades\App;
 
 class rolesController extends Controller
 {
@@ -80,7 +81,9 @@ class rolesController extends Controller
      */
     public function edit($id)
     {
-        //
+        //Ищем роль с этим айди, потом редиеектим на форму редактирования
+        $role = roles::find($id);
+        return view('roles.editrole', compact('role','id'));
     }
 
     /**
@@ -92,7 +95,26 @@ class rolesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        //валидируем метод апдейта, потом сохраняем и редиректим на вьюролс
+        //проверяем введённые данные
+
+        $this->validate($request,[
+            'name'=>'required',
+            'role_type'=>'required',
+            'dep_id'=>'required'
+        ]);
+        //отправляем данные в базу
+        $role = \App\roles::find($id);
+        $role->name = $request->get('name');
+        $role->role_type = $request->get('role_type');
+        $role->dep_id = $request->get('dep_id');
+        if ($role->save()){
+            $roles = \App\roles::all();
+            return view('roles.viewroles', ['allroles' => $roles, 'success' => 'Роль успешно изменена']);
+        }
+        else{
+            return view('roles.createroles');
+        }
     }
 
     /**
@@ -103,6 +125,8 @@ class rolesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        \App\roles::destroy($id);
+        $roles = \App\roles::all();
+        return view('roles.viewroles', ['allroles' => $roles, 'success' => 'Роль успешно удалена']);
     }
 }

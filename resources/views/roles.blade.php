@@ -103,6 +103,7 @@ https://www.webslesson.info/2018/01/insert-update-delete-in-mysql-table-laravel-
 <body>
 <!--ТОП НАВБАР-->
 <div class="topnav">
+    <!--<a href="/depts">Авторизация</a>-->
     <a class="active" href="/roles">Роли</a>
     <a href="/depts">Подразделения</a>
     <a href="/quotas">Квоты на плановую госпитализацию</a>
@@ -110,7 +111,7 @@ https://www.webslesson.info/2018/01/insert-update-delete-in-mysql-table-laravel-
 </div>
 <!--ТОП НАВБАР-->
 @yield('sidebar')
-<div class="container" style="margin-right:25%">
+<div class="container" style="margin-right:25%;margin-left: 15px;margin-top: 15px; padding-right:15px;">
     @yield('content')
 </div>
 

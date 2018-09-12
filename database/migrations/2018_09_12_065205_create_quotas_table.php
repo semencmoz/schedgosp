@@ -17,10 +17,10 @@ class CreateQuotasTable extends Migration
             $table->increments('id');
 
             $table->integer('dep_id');
-            $table->foreign('dep_id')
+            /*$table->foreign('dep_id')
                 ->references('id')->on('depts')
                 ->onDelete('set null')
-                ->onUpdate('cascade');
+                ->onUpdate('cascade');*/
 
             $table->double('qtty')->nullable(false);
             $table->dateTime('date_start')->nullable(false);

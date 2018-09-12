@@ -19,10 +19,10 @@ class CreateRolesTable extends Migration
             $table->string('role_type')->nullable(false);
 
             $table->integer('dep_id')->nullable(false);
-            $table->foreign('dep_id')
+            /*$table->foreign('dep_id')
                 ->references('id')->on('depts')
                 ->onDelete('set null')
-                ->onUpdate('cascade');
+                ->onUpdate('cascade');*/
 
             $table->timestamps();
         });

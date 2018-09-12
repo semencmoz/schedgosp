@@ -20,10 +20,10 @@ class CreateListingsTable extends Migration
             $table->dateTime('out_date');
 
             $table->integer('quota_id');
-            $table->foreign('quota_id')
+            /*$table->foreign('quota_id')
                 ->references('id')->on('quotas')
                 ->onDelete('set null')
-                ->onUpdate('cascade');
+                ->onUpdate('cascade');*/
 
             $table->timestamps();
         });

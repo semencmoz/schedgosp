@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\depts;
 class deptsController extends Controller
 {
     /**
@@ -14,6 +14,9 @@ class deptsController extends Controller
     public function index()
     {
         //
+        $depts = \App\depts::all();
+
+        return view('depts.viewdepts', ['alldepts' => $depts]);
     }
 
     /**
@@ -24,6 +27,7 @@ class deptsController extends Controller
     public function create()
     {
         //
+        return view('depts.createdepts');
     }
 
     /**
@@ -34,7 +38,21 @@ class deptsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //проверяем введённые данные
+        $this->validate($request,[
+            'name'=>'required',
+        ]);
+        //отправляем данные в базу
+        $dept = new depts([
+            'name' => $request->get('name'),
+        ]);
+        if ($dept->save()){
+            $depts = \App\depts::all();
+            return view('depts.viewdepts', ['alldepts' => $depts, 'success' => 'Подаазделение успешно создано']);
+        }
+        else{
+            return view('depts.createdepts');
+        }
     }
 
     /**
@@ -57,6 +75,8 @@ class deptsController extends Controller
     public function edit($id)
     {
         //
+        $depts = depts::find($id);
+        return view('depts.editdept', compact('dept','id'));
     }
 
     /**
@@ -68,7 +88,19 @@ class deptsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request,[
+            'name'=>'required',
+        ]);
+        //отправляем данные в базу
+        $dept = \App\depts::find($id);
+        $dept->name = $request->get('name');
+        if ($dept->save()){
+            $depts = \App\depts::all();
+            return view('depts.viewdepts', ['alldepts' => $depts, 'success' => 'Подразделение успешно изменено']);
+        }
+        else{
+            return view('depts.createdepts');
+        }
     }
 
     /**
@@ -79,6 +111,8 @@ class deptsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        \App\depts::destroy($id);
+        $depts = \App\depts::all();
+        return view('depts.viewdepts', ['alldepts' => $depts, 'success' => 'Подразделение успешно удалено']);
     }
 }

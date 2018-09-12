@@ -1,11 +1,10 @@
-
-@extends('roles')
+@extends('depts')
 
 @section('sidebar')
     <!--Правый сайдбар-->
     <div class="w3-sidebar w3-bar-block w3-border" style="width:25%;right:0">
         <h5 class="w3-bar-item">Действия</h5>
-        <a href="/roles/create" class="w3-bar-item w3-button w3-hover-green">Добавить новую роль</a>
+        <a href="/depts/create" class="w3-bar-item w3-button w3-hover-green">Добавить новое подразделение</a>
     </div>
     <!--Правый сайдбар-->
 @endsection
@@ -54,22 +53,18 @@
             font-size: 21px;
         }
     </style>
-    <h1>Список созданных ролей</h1>
+    <h1>Список подразделений</h1>
     <table class="comicGreen">
         <thead>
-        <td>Название</td>
-        <td>Тип роли</td>
-        <td>Подразделение, привязанное к роли</td>
-        <td>Действия с ролью</td>
+        <td>Название Подразделения</td>
+        <td>Действия с подразделением</td>
         </thead>
         <tbody>
-        @foreach ($allroles as $role)
+        @foreach ($alldepts as $dept)
             <tr>
-                <td>{{ $role->name }}</td>
-                <td class="inner-table">{{ $role->role_type }}</td>
-                <td class="inner-table">{{ $role->dep_id }}</td>
-                <td ><a  href="{{action('rolesController@edit', $role->id)}}"><img src="" alt="редактировать"></a>
-                    <form method="post" class="delete_form" action="{{action('rolesController@destroy', $role->id)}}">
+                <td>{{ $dept->name }}</td>
+                <td ><a  href="{{action('deptsController@edit', $dept->id)}}"><img src="" alt="редактировать"></a>
+                    <form method="post" class="delete_form" action="{{action('deptsController@destroy', $dept->id)}}">
                         {{csrf_field()}}
                         <input type="hidden" name="_method" value="DELETE" />
                         <button type="submit">Удалить</button>
@@ -81,7 +76,7 @@
     <script>
         $(document).ready(function(){
             $('.delete_form').on('submit', function(){
-                if(confirm("Вы уверены, что хотите удалить эту роль?"))
+                if(confirm("Вы уверены, что хотите удалить подразделение?"))
                 {
                     return true;
                 }

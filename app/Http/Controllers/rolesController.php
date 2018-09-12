@@ -23,7 +23,8 @@ class rolesController extends Controller
      */
     public function create()
     {
-        //
+        //Создание новой роли
+        return view('roles.createroles');
     }
 
     /**

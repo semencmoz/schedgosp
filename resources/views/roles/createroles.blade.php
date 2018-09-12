@@ -20,16 +20,16 @@
                     <p>{{ \Session::get('success') }}</p>
                 </div>
             @endif
-            <form method="post" action="{{url('student')}}">
+            <form method="post" action="{{url('roles')}}">
                 {{csrf_field()}}
                 <div class="form-group">
-                    <input type="text" name="name" class="form-control" placeholder="Введите азвание роли" />
+                    <input type="text" name="name" class="form-control" placeholder="Введите название роли" />
                 </div>
                 <div class="form-group">
                     <input type="text" name="role_type" class="form-control" placeholder="Введите тип роли" />
                 </div>
                 <div class="form-group">
-                    <input type="text" name="role_type" class="form-control" placeholder="Введите тип роли" />
+                    <input type="text" name="dep_id" class="form-control" placeholder="id подразделения" />
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-primary" />

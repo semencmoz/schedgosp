@@ -1,5 +1,14 @@
 @extends('roles')
 
+@section('sidebar')
+<!--Правый сайдбар-->
+<div class="w3-sidebar w3-bar-block w3-border" style="width:25%;right:0">
+    <h5 class="w3-bar-item">Действия</h5>
+    <a href="/roles" class="w3-bar-item w3-button w3-hover-green">Вернуться к списку ролей</a>
+</div>
+<!--Правый сайдбар-->
+@endsection
+
 @section('content')
     <div class="row">
         <div class="col-md-12">

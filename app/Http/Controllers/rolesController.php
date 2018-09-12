@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\roles;
 
 class rolesController extends Controller
 {
@@ -13,7 +14,10 @@ class rolesController extends Controller
      */
     public function index()
     {
-        //
+        //индекс при обращени по /roles
+        $roles = \App\roles::all();
+
+        return view('roles.viewroles', ['allroles' => $roles]);
     }
 
     /**
@@ -35,7 +39,26 @@ class rolesController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //проверяем введённые данные
+        $this->validate($request,[
+            'name'=>'required',
+            'role_type'=>'required',
+            'dep_id'=>'required'
+        ]);
+        //отправляем данные в базу
+        $role = new roles([
+            'name' => $request->get('name'),
+            'role_type' => $request->get('role_type'),
+            'dep_id' => $request->get('dep_id'),
+        ]);
+        if ($role->save()){
+            $roles = \App\roles::all();
+            return view('roles.viewroles', ['allroles' => $roles, 'success' => 'Роль успешно создана']);
+        }
+        else{
+            return view('roles.createroles');
+        }
+
     }
 
     /**

@@ -15,6 +15,16 @@ class CreateListingsTable extends Migration
     {
         Schema::create('listings', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('patient_name');
+            $table->dateTime('in_date');
+            $table->dateTime('out_date');
+
+            $table->integer('quota_id');
+            $table->foreign('quota_id')
+                ->references('id')->on('quotas')
+                ->onDelete('set null')
+                ->onUpdate('cascade');
+
             $table->timestamps();
         });
     }

@@ -10,6 +10,6 @@ class listings extends Model
         'dep_id',
         'patient_name',
         'in_date',
-        'dept_id'
+        'quota_id'
     ];
 }

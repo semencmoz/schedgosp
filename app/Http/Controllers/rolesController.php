@@ -59,6 +59,10 @@ class rolesController extends Controller
         ]);
         if ($role->save()){
             $roles = \App\roles::all();
+            foreach($roles as $role){
+                $dept = \App\depts::find($role->dep_id);
+                $role->dep_id = $dept->name;
+            }
             return view('roles.viewroles', ['allroles' => $roles, 'success' => 'Роль успешно создана']);
         }
         else{
@@ -88,7 +92,10 @@ class rolesController extends Controller
     {
         //Ищем роль с этим айди, потом редиеектим на форму редактирования
         $role = roles::find($id);
-        return view('roles.editrole', compact('role','id'));
+        $dept = \App\depts::find($role->dep_id);
+        $role->dep_id = $dept->name;
+        $depts =  \App\depts::all();
+        return view('roles.editrole', compact('role','id'), ['alldepts' =>$depts]);
     }
 
     /**
@@ -115,6 +122,10 @@ class rolesController extends Controller
         $role->dep_id = $request->get('dep_id');
         if ($role->save()){
             $roles = \App\roles::all();
+            foreach($roles as $role){
+                $dept = \App\depts::find($role->dep_id);
+                $role->dep_id = $dept->name;
+            }
             return view('roles.viewroles', ['allroles' => $roles, 'success' => 'Роль успешно изменена']);
         }
         else{
@@ -132,6 +143,10 @@ class rolesController extends Controller
     {
         \App\roles::destroy($id);
         $roles = \App\roles::all();
+        foreach($roles as $role){
+            $dept = \App\depts::find($role->dep_id);
+            $role->dep_id = $dept->name;
+        }
         return view('roles.viewroles', ['allroles' => $roles, 'success' => 'Роль успешно удалена']);
     }
 }

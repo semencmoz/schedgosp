@@ -37,7 +37,11 @@
                     <label for="dep_id">Выберите подразделение, которому будет прикреплена роль</label>
                     <select name="dep_id">
                         @foreach ($alldepts as $dept)
-                            <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                            <option value="{{ $dept->id }}"
+                                    @if ($dept->name == $role->dep_id)
+                                    selected="selected"
+                                    @endif
+                            >{{ $dept->name }}
                         @endforeach
                     </select>
                 </div>

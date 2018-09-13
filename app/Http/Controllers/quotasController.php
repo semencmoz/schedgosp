@@ -113,7 +113,7 @@ class quotasController extends Controller
         ]);
         //отправляем данные в базу
         $quota = \App\quotas::find($id);
-        $quota->dep_id = $request->get('name');
+        $quota->dep_id = $request->get('dep_id');
         $quota->qtty = $request->get('qtty');
         $quota->date_start = $request->get('date_start');
         $quota->date_end = $request->get('date_end');

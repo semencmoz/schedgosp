@@ -31,22 +31,27 @@
                     <label for="dep_id">Выберите подразделение, которому будет назначена квота</label>
                     <select name="dep_id">
                         @foreach ($alldepts as $dept)
-                            <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                            <option value="{{ $dept->id }}"
+                                @if ($dept->name == $quota->dep_id)
+                                     selected="selected"
+                                @endif
+                            >{{ $dept->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
                 <div class="form-group">
-                    <input type="number" name="qtty" class="form-control" placeholder="Введите количество" />
+                    <input type="number" name="qtty" class="form-control" placeholder="Введите количество" value="{{$quota->qtty}}"/>
                 </div>
 
                 <div class="form-group">
                     <label for="date_start">Дата начала</label>
-                    <input type="date" name="date_start" class="form-control" value="<?php echo date('Y-m-d'); ?>" />
+                    <input type="date" name="date_start" class="form-control" value="<?php echo date('Y-m-d',strtotime($quota->date_start)); ?>" />
                 </div>
 
                 <div class="form-group">
                     <label for="date_end">Дата конца</label>
-                    <input type="date" name="date_end" class="form-control" value="<?php echo date('Y-m-d'); ?>" />
+                    <input type="date" name="date_end" class="form-control" value="<?php echo date('Y-m-d',strtotime($quota->date_end)); ?>" />
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-primary" />

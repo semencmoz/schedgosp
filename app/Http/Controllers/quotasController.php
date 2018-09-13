@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\quotas;
+use App\depts;
 
 class quotasController extends Controller
 {
@@ -14,6 +16,8 @@ class quotasController extends Controller
     public function index()
     {
         //
+        $quotas = \App\quotas::all();
+        return view('quotas.viewquotas', ['allquotas' => $quotas]);
     }
 
     /**
@@ -23,7 +27,8 @@ class quotasController extends Controller
      */
     public function create()
     {
-        //
+        $depts =  \App\depts::all();
+        return view('quotas.createquotas',['alldepts' =>$depts]);
     }
 
     /**

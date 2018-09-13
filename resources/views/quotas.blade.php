@@ -7,7 +7,7 @@ https://www.webslesson.info/2018/01/insert-update-delete-in-mysql-table-laravel-
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>Управление подразделениями</title>
+    <title>Управление квотами</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet" type="text/css">
 
@@ -105,8 +105,8 @@ https://www.webslesson.info/2018/01/insert-update-delete-in-mysql-table-laravel-
 <div class="topnav">
     <!--<a href="/depts">Авторизация</a>-->
     <a href="/roles">Роли</a>
-    <a class="active" href="/depts">Подразделения</a>
-    <a href="/quotas">Квоты на плановую госпитализацию</a>
+    <a href="/depts">Подразделения</a>
+    <a class="active" href="/quotas">Квоты на плановую госпитализацию</a>
     <a href="/listings">Плановые госпитализации</a>
 </div>
 <!--ТОП НАВБАР-->

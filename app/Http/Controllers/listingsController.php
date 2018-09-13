@@ -53,7 +53,7 @@ class listingsController extends Controller
         //отправляем данные в базу
 
         /*определяем квоту, в которую поместить запись*/
-        $quota_id = $this->get_avaliableQuota($request->get('in_date'));
+        $quota_id = $this->get_avaliableQuota($request->get('in_date'),-1);
         if ($quota_id==null)
         {
             $error = \Illuminate\Validation\ValidationException::withMessages(
@@ -120,7 +120,44 @@ class listingsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request,[
+            'dep_id'=>'required',
+            'patient_name'=>'required',
+            'in_date'=>'required',
+        ]);
+        //отправляем данные в базу
+
+        /*определяем квоту, в которую поместить запись*/
+        $quota_id = $this->get_avaliableQuota($request->get('in_date'),$id);
+        if ($quota_id==null)
+        {
+            $error = \Illuminate\Validation\ValidationException::withMessages(
+                [
+                    'Нет свободных квот' => 'Квот на указанную дату либо нет, либо они закончились',
+                ]
+            );
+            throw $error;
+        }
+        /****************
+         * определяем квоту, в которую поместить запись
+         */
+        //отправляем данные в базу
+        $listing = \App\listings::find($id);
+        $listing->dep_id = $request->get('dep_id');
+        $listing->patient_name = $request->get('patient_name');
+        $listing->in_date = $request->get('in_date');
+        $listing->quota_id = $quota_id;
+        if ($listing->save()){
+            $listings = \App\listings::all();
+            foreach($listings as $listing){
+                $listing = \App\depts::find($listing->dep_id);
+                $listing->dep_id = $listing->name;
+            }
+            return view('listings.viewlistings', ['alllistings' => $listings, 'success' => 'Госпитализация успешно изменена']);
+        }
+        else{
+            return view('listings.createlistings');
+        }
     }
 
     /**
@@ -140,13 +177,27 @@ class listingsController extends Controller
         return view('listings.viewlistings', ['alllistings' => $listings, 'success' => 'Госпитализация успешно удалена']);
     }
 
-    public function get_avaliableQuota($date_in){
+    public function get_avaliableQuota($date_in,$id){
         $res=\App\quotas::where('date_start','<=',$date_in)->where('date_end','>=',$date_in)->get();
         if (!isset($res)) return null;
-        if (count($res)==1) return $res->first()->id;
+        if (count($res)==1) {
+            if ($id<0){
+                if (\App\listings::where('quota_id', $res->first()->id)->count() < $res->first()->qtty)
+                    return $res->first()->id;
+                else return null;
+            }
+            else{
+                if (\App\listings::where('quota_id', $res->first()->id)->where('id','!=',$id)->count() < $res->first()->qtty)
+                    return $res->first()->id;
+                else return null;
+            }
+        }
         $wiable = array();
         foreach ($res as $quota){
-            $listings_with_that_quota = \App\listings::where('quota_id', $quota->id)->count();
+            if ($id<0) $listings_with_that_quota = \App\listings::where('quota_id', $quota->id)->count();
+            else{
+                $listings_with_that_quota = \App\listings::where('quota_id', $quota->id)->where('id','!=',$id)->count();
+            }
             if($listings_with_that_quota < $quota->qtty)
                 $wiable = array_add($wiable, $quota->id, $listings_with_that_quota);
 

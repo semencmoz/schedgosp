@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\listings;
+use App\depts;
+
 class listingsController extends Controller
 {
     /**
@@ -14,6 +17,12 @@ class listingsController extends Controller
     public function index()
     {
         //
+        $listings = \App\listings::all();
+        foreach ($listings as $listing){
+            $dept = \App\depts::find($listing->dep_id);
+            $listing->dep_id = $dept->name;
+        }
+        return view('listings.viewlistings', ['alllistings' => $listings]);
     }
 
     /**
@@ -23,7 +32,8 @@ class listingsController extends Controller
      */
     public function create()
     {
-        //
+        $depts =  \App\depts::all();
+        return view('listings.createlistings',['alldepts' =>$depts]);
     }
 
     /**
@@ -34,7 +44,35 @@ class listingsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request,[
+            'dep_id'=>'required',
+            'patient_name'=>'required',
+            'in_date'=>'required',
+        ]);
+        //отправляем данные в базу
+
+        /*определяем квоту, в которую поместить запись*/
+        $quota_id = 0;
+        /****************
+         * определяем квоту, в которую поместить запись
+         */
+        $listing = new listings([
+            'dep_id' => $request->get('dep_id'),
+            'patient_name' => $request->get('patient_name'),
+            'in_date' => $request->get('in_date'),
+            'date_end' => $quota_id,
+        ]);
+        if ($listing->save()){
+            $listings = \App\listings::all();
+            foreach ($listings as $listing){
+                $dept = \App\depts::find($listing->dep_id);
+                $listing->dep_id = $dept->name;
+            }
+            return view('listings.viewlistings', ['alllistings' => $listings, 'success' => 'Квота создана']);
+        }
+        else{
+            return view('listings.createlistings');
+        }
     }
 
     /**

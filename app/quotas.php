@@ -12,4 +12,10 @@ class quotas extends Model
         'date_start',
         'date_end'
     ];
+
+    /*получаем квоты, на которые можно назначить госпитализации*/
+
+    public function get_avaliableQuota($date_in){
+
+    }
 }

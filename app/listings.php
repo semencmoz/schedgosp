@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class listings extends Model
 {
-    //
+    protected $fillable = [
+        'dep_id',
+        'patient_name',
+        'in_date',
+        'dept_id'
+    ];
 }

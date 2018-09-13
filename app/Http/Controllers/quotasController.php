@@ -146,4 +146,5 @@ class quotasController extends Controller
         }
         return view('quotas.viewquotas', ['allquotas' => $quotas, 'success' => 'Квота успешно удалена']);
     }
+
 }

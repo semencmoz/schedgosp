@@ -59,6 +59,10 @@ class quotasController extends Controller
         ]);
         if ($quota->save()){
             $quotas = \App\quotas::all();
+            foreach ($quotas as $quota){
+                $dept = \App\depts::find($quota->dep_id);
+                $quota->dep_id = $dept->name;
+            }
             return view('quotas.viewquotas', ['allquotas' => $quotas, 'success' => 'Квота создана']);
         }
         else{
@@ -85,7 +89,11 @@ class quotasController extends Controller
      */
     public function edit($id)
     {
-        //
+        $quota = quotas::find($id);
+        $dept = \App\depts::find($quota->dep_id);
+        $quota->dep_id = $dept->name;
+        $depts =  \App\depts::all();
+        return view('quotas.editquotas', compact('quota','id'), ['alldepts' =>$depts]);
     }
 
     /**
@@ -97,7 +105,29 @@ class quotasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request,[
+            'dep_id'=>'required',
+            'qtty'=>'required',
+            'date_start'=>'required',
+            'date_end'=>'required'
+        ]);
+        //отправляем данные в базу
+        $quota = \App\quotas::find($id);
+        $quota->dep_id = $request->get('name');
+        $quota->qtty = $request->get('qtty');
+        $quota->date_start = $request->get('date_start');
+        $quota->date_end = $request->get('date_end');
+        if ($quota->save()){
+            $quotas = \App\quotas::all();
+            foreach($quotas as $quota){
+                $quota = \App\depts::find($quota->dep_id);
+                $quota->dep_id = $quota->name;
+            }
+            return view('quotas.viewquotas', ['allquotas' => $quotas, 'success' => 'Квота успешно изменена']);
+        }
+        else{
+            return view('quotas.createquotas');
+        }
     }
 
     /**
@@ -108,6 +138,12 @@ class quotasController extends Controller
      */
     public function destroy($id)
     {
-        //
+        \App\quotas::destroy($id);
+        $quotas = \App\quotas::all();
+        foreach($quotas as $quota){
+            $dept = \App\depts::find($quota->dep_id);
+            $quota->dep_id = $dept->name;
+        }
+        return view('quotas.viewquotas', ['allquotas' => $quotas, 'success' => 'Квота успешно удалена']);
     }
 }

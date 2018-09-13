@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\roles;
+use App\depts;
 use Illuminate\Support\Facades\App;
 
 class rolesController extends Controller
@@ -17,7 +18,10 @@ class rolesController extends Controller
     {
         //индекс при обращени по /roles
         $roles = \App\roles::all();
-
+        foreach($roles as $role){
+            $dept = \App\depts::find($role->dep_id);
+            $role->dep_id = $dept->name;
+        }
         return view('roles.viewroles', ['allroles' => $roles]);
     }
 
@@ -29,7 +33,8 @@ class rolesController extends Controller
     public function create()
     {
         //Создание новой роли
-        return view('roles.createroles');
+        $depts =  \App\depts::all();
+        return view('roles.createroles',['alldepts' =>$depts]);
     }
 
     /**

@@ -17,6 +17,10 @@ class quotasController extends Controller
     {
         //
         $quotas = \App\quotas::all();
+        foreach ($quotas as $quota){
+            $dept = \App\depts::find($quota->dep_id);
+            $quota->dep_id = $dept->name;
+        }
         return view('quotas.viewquotas', ['allquotas' => $quotas]);
     }
 
@@ -39,7 +43,27 @@ class quotasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        //проверяем введённые данные
+        $this->validate($request,[
+            'dep_id'=>'required',
+            'qtty'=>'required',
+            'date_start'=>'required',
+            'date_end'=>'required'
+        ]);
+        //отправляем данные в базу
+        $quota = new quotas([
+            'dep_id' => $request->get('dep_id'),
+            'qtty' => $request->get('qtty'),
+            'date_start' => $request->get('date_start'),
+            'date_end' => $request->get('date_end'),
+        ]);
+        if ($quota->save()){
+            $quotas = \App\quotas::all();
+            return view('quotas.viewquotas', ['allquotas' => $quotas, 'success' => 'Квота создана']);
+        }
+        else{
+            return view('quotas.createquotas');
+        }
     }
 
     /**

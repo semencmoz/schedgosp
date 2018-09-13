@@ -33,7 +33,12 @@
                     <input type="text" name="role_type" class="form-control" placeholder="Введите тип роли" />
                 </div>
                 <div class="form-group">
-                    <input type="number" name="dep_id" class="form-control" placeholder="id подразделения" />
+                    <label for="dep_id">Выберите подразделение, которому будет прикреплена роль</label>
+                    <select name="dep_id">
+                        @foreach ($alldepts as $dept)
+                            <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-primary" />

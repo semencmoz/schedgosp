@@ -177,40 +177,49 @@ class listingsController extends Controller
         return view('listings.viewlistings', ['alllistings' => $listings, 'success' => 'Госпитализация успешно удалена']);
     }
 
+    /*функция для валидации введённых параметров квот -
+    * есть ли квоты на данную дату
+    * есть ли квоты для данного отделения
+    */
     public function get_avaliableQuota($date_in,$id,$dep_id){
-
+        /*берём список квот для даты и отееления*/
         $res=\App\quotas::where('date_start','<=',$date_in)->where('date_end','>=',$date_in)->where('dep_id',$dep_id)->get();
-        
-        if (!isset($res)) return null;
-        if (count($res)==1) {
-            if ($id<0){
+
+        if (!isset($res)) return null; //если у отделения нет квот на данную дату, возвращаем ноль
+        if (count($res)==1) {//если квота одна, возвращаем её
+            if ($id<0){//если мы создаём запись с нуля
                 if (\App\listings::where('quota_id', $res->first()->id)->count() < $res->first()->qtty)
-                    return $res->first()->id;
-                else return null;
+                    return $res->first()->id; // если на квота, которую мы создали не забита планами, то всё норм
+                else return null;//иначе возвращаем ноль
             }
-            else{
+            else{//если мы редактируем запись
                 if (\App\listings::where('quota_id', $res->first()->id)->where('id','!=',$id)->count() < $res->first()->qtty)
-                    return $res->first()->id;
-                else return null;
+                    return $res->first()->id;// если на квота, которую мы создали не забита планами, то всё норм
+                else return null;//иначе возвращаем ноль
             }
         }
-        $wiable = array();
+        $viable = array();
+        //если квот, которые можно открыть на данную дату для данного отделения несколько, фильтруем их
+        // и возвращаем одну
         foreach ($res as $quota){
-            if ($id<0) $listings_with_that_quota = \App\listings::where('quota_id', $quota->id)->count();
+            //если запись создаётся с нуля, возвращаем для квоты количество доступных записей
+            if ($id<0) $am_listings = \App\listings::where('quota_id', $quota->id)->count();
             else{
-                $listings_with_that_quota = \App\listings::where('quota_id', $quota->id)->where('id','!=',$id)->count();
+                //если запись редактируется, то возвращаем количество доступных записей исключая ту, которую редактируем
+                $am_listings = \App\listings::where('quota_id', $quota->id)->where('id','!=',$id)->count();
             }
-            if($listings_with_that_quota < $quota->qtty)
-                $wiable = array_add($wiable, $quota->id, $listings_with_that_quota);
-
+            if($am_listings < $quota->qtty)
+                //если запись на эту квоуу доступна, добавляем квоту в список с количеством доступных для квоты записей
+                $viable = array_add($viable, $quota->id, $am_listings);
         }
 
-        if (count($wiable)<1) return null;
-        if (count($wiable)==1) return key($wiable);
-        if (count($wiable)>1) {
-            asort($wiable);//сортируем по наименьшей оставшейся квоте
-            reset($wiable);//ставим указатель на первый эеемент
-            return key($wiable);//возвращаем ключ(айди квоты) первого элемента массива
+        if (count($viable)<1) return null; //если в списке нет доступных записей, то возвращаем ноль
+        if (count($viable)==1) return key($viable);//если в списке оолько одна запись, то возвращаем ид квоты
+        if (count($viable)>1) { //если записей больше одной, сортируем по количеству свободных записей и возвращаем
+            // квоту с наименьшем количеством свободных слотов
+            asort($viable);//сортируем по наименьшей оставшейся квоте
+            reset($viable);//ставим указатель на первый эеемент
+            return key($viable);//возвращаем ключ(айди квоты) первого элемента массива
         }
 
     }

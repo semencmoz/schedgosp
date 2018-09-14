@@ -53,7 +53,7 @@ class listingsController extends Controller
         //отправляем данные в базу
 
         /*определяем квоту, в которую поместить запись*/
-        $quota_id = $this->get_avaliableQuota($request->get('in_date'),-1);
+        $quota_id = $this->get_avaliableQuota($request->get('in_date'),-1, $request->get('dep_id'));
         if ($quota_id==null)
         {
             $error = \Illuminate\Validation\ValidationException::withMessages(
@@ -78,7 +78,7 @@ class listingsController extends Controller
                 $dept = \App\depts::find($listing->dep_id);
                 $listing->dep_id = $dept->name;
             }
-            return view('listings.viewlistings', ['alllistings' => $listings, 'success' => 'Квота создана']);
+            return view('listings.viewlistings', ['alllistings' => $listings, 'success' => 'Плановая госпитализация создана']);
         }
         else{
             return view('listings.createlistings');
@@ -128,7 +128,7 @@ class listingsController extends Controller
         //отправляем данные в базу
 
         /*определяем квоту, в которую поместить запись*/
-        $quota_id = $this->get_avaliableQuota($request->get('in_date'),$id);
+        $quota_id = $this->get_avaliableQuota($request->get('in_date'),$id, $request->get('dep_id'));
         if ($quota_id==null)
         {
             $error = \Illuminate\Validation\ValidationException::withMessages(
@@ -177,8 +177,10 @@ class listingsController extends Controller
         return view('listings.viewlistings', ['alllistings' => $listings, 'success' => 'Госпитализация успешно удалена']);
     }
 
-    public function get_avaliableQuota($date_in,$id){
-        $res=\App\quotas::where('date_start','<=',$date_in)->where('date_end','>=',$date_in)->get();
+    public function get_avaliableQuota($date_in,$id,$dep_id){
+
+        $res=\App\quotas::where('date_start','<=',$date_in)->where('date_end','>=',$date_in)->where('dep_id',$dep_id)->get();
+        
         if (!isset($res)) return null;
         if (count($res)==1) {
             if ($id<0){

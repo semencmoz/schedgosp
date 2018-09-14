@@ -19,3 +19,6 @@ Route::resource('/roles','rolesController');
 Route::resource('/depts','deptsController');
 Route::resource('/listings','listingsController');
 Route::resource('/quotas','quotasController');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

@@ -18,41 +18,7 @@
             <p>{{$success}}</p>
         </div>
     @endif
-    <style>
-        table.comicGreen {
-            font-family: Georgia, serif;
-            border: 2px solid #4F7849;
-            background-color: #EEEEEE;
-            width: 100%;
-            text-align: center;
-            border-collapse: collapse;
-        }
-        table.comicGreen td, table.comicGreen th {
-            border: 1px solid #4F7849;
-            padding: 3px 2px;
-        }
-        table.comicGreen tbody td {
-            font-size: 19px;
-            font-weight: bold;
-            color: #4F7849;
-        }
-        table.comicGreen tr:nth-child(even) {
-            background: #CEE0CC;
-        }
-        table.comicGreen tfoot {
-            font-size: 21px;
-            font-weight: bold;
-            color: #FFFFFF;
-            background: #4F7849;
-            background: -moz-linear-gradient(top, #7b9a76 0%, #60855b 66%, #4F7849 100%);
-            background: -webkit-linear-gradient(top, #7b9a76 0%, #60855b 66%, #4F7849 100%);
-            background: linear-gradient(to bottom, #7b9a76 0%, #60855b 66%, #4F7849 100%);
-            border-top: 1px solid #444444;
-        }
-        table.comicGreen tfoot td {
-            font-size: 21px;
-        }
-    </style>
+
     <h1>Список подразделений</h1>
     <table class="comicGreen">
         <thead>

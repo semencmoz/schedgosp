@@ -20,17 +20,19 @@
     @endif
 
     <h1>Квоты</h1>
-    <div id="calendar1-wrapper1"></div>
+    <div id="filters">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <select id="deptid" name="dep_id">
+            @foreach ($alldepts as $dept)
+                <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+            @endforeach
+        </select>
+        <div id="calendar1-wrapper1"></div>
+
+    </div>
+
     <script type="application/javascript" defer="defer">
-        $(document).ready(function () {
-            new datepicker({
-                dom:document.getElementById('calendar1-wrapper1'),
-                mode: 'ru',
-                onClickDate:function(date){
-                    document.querySelector('.calendar1-msg').innerHTML='calendar1 your selected '+date;
-                }
-            });
-        });
+        $(document).ready(initDatePicker());
     </script>
     <table class="comicGreen">
         <thead>
@@ -44,7 +46,7 @@
             <tr>
                 <td>{{ $quota->dep_id }}</td>
                 <td>{{ $quota->qtty }}</td>
-                <td>{{ date("d.m.y", strtotime($quota->date_start)) }}</td>
+                <td>{{ date("d.m.y", strtotime($quota->date)) }}</td>
                 <td ><a  href="{{action('quotasController@edit', $quota->id)}}"><img src="" alt="редактировать"></a>
                     <form method="post" class="delete_form" action="{{action('quotasController@destroy', $quota->id)}}">
                         {{csrf_field()}}

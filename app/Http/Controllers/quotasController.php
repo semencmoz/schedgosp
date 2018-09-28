@@ -21,7 +21,8 @@ class quotasController extends Controller
             $dept = \App\depts::find($quota->dep_id);
             $quota->dep_id = $dept->name;
         }
-        return view('quotas.viewquotas', ['allquotas' => $quotas]);
+        $depts =  \App\depts::all();
+        return view('quotas.viewquotas', ['allquotas' => $quotas, 'alldepts' =>$depts]);
     }
 
     /**
@@ -63,7 +64,8 @@ class quotasController extends Controller
                 $dept = \App\depts::find($quota->dep_id);
                 $quota->dep_id = $dept->name;
             }
-            return view('quotas.viewquotas', ['allquotas' => $quotas, 'success' => 'Квота создана']);
+            $depts =  \App\depts::all();
+            return view('quotas.viewquotas', ['allquotas' => $quotas, 'success' => 'Квота создана', 'alldepts' =>$depts]);
         }
         else{
             return view('quotas.createquotas');
@@ -146,5 +148,15 @@ class quotasController extends Controller
         }
         return view('quotas.viewquotas', ['allquotas' => $quotas, 'success' => 'Квота успешно удалена']);
     }
-
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function ajpost(Request $request)
+    {
+        $response = \App\quotas::where('date',$request->date)->where('dep_id',$request->dep_id)->get();
+        if (isset($response)) return response()->json(['querys'=>$response->toJson()]);
+    }
 }

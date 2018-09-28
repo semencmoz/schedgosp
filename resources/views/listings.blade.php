@@ -13,6 +13,7 @@ https://www.webslesson.info/2018/01/insert-update-delete-in-mysql-table-laravel-
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('/css/main_dash.css') }}">
+    <link rel="stylesheet" href="{{ asset('/css/custom-filters.css') }}">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>

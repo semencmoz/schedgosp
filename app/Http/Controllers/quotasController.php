@@ -48,15 +48,14 @@ class quotasController extends Controller
         $this->validate($request,[
             'dep_id'=>'required',
             'qtty'=>'required',
-            'date_start'=>'required',
-            'date_end'=>'required'
+            'date'=>'required',
         ]);
         //отправляем данные в базу
         $quota = new quotas([
             'dep_id' => $request->get('dep_id'),
             'qtty' => $request->get('qtty'),
-            'date_start' => $request->get('date_start'),
-            'date_end' => $request->get('date_end'),
+            'date' => $request->get('date_start'),
+            'qttyused' => 0
         ]);
         if ($quota->save()){
             $quotas = \App\quotas::all();

@@ -43,12 +43,7 @@
 
                 <div class="form-group">
                     <label for="date_start">Дата начала</label>
-                    <input type="date" name="date_start" class="form-control" value="<?php echo date('Y-m-d'); ?>" />
-                </div>
-
-                <div class="form-group">
-                    <label for="date_end">Дата конца</label>
-                    <input type="date" name="date_end" class="form-control" value="<?php echo date('Y-m-d'); ?>" />
+                    <input type="date" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" />
                 </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-primary" />

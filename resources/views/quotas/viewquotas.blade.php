@@ -37,7 +37,8 @@
     <table class="comicGreen">
         <thead>
         <td>Подразделение</td>
-        <td>Количество свободных мест</td>
+        <td>Количество мест</td>
+        <td>Количество мест занято</td>
         <td>Дата</td>
         <td>Действия с квотой</td>
         </thead>
@@ -46,6 +47,7 @@
             <tr>
                 <td>{{ $quota->dep_id }}</td>
                 <td>{{ $quota->qtty }}</td>
+                <td>{{ $quota->qttyused }}</td>
                 <td>{{ date("d.m.y", strtotime($quota->date)) }}</td>
                 <td ><a  href="{{action('quotasController@edit', $quota->id)}}"><img src="" alt="редактировать"></a>
                     <form method="post" class="delete_form" action="{{action('quotasController@destroy', $quota->id)}}">

@@ -3,6 +3,7 @@ function initDatePicker(){
         dom:document.getElementById('calendar1-wrapper1'),
         mode: 'ru',
         onClickDate:function(date){
+            
             sel_dep = $('#deptid').val();
             //date = date
 

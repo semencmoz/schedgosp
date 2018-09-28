@@ -19,13 +19,24 @@
         </div>
     @endif
 
-    <h1>Список квот</h1>
+    <h1>Квоты</h1>
+    <div id="calendar1-wrapper1"></div>
+    <script type="application/javascript" defer="defer">
+        $(document).ready(function () {
+            new datepicker({
+                dom:document.getElementById('calendar1-wrapper1'),
+                mode: 'ru',
+                onClickDate:function(date){
+                    document.querySelector('.calendar1-msg').innerHTML='calendar1 your selected '+date;
+                }
+            });
+        });
+    </script>
     <table class="comicGreen">
         <thead>
         <td>Подразделение</td>
-        <td>Количество коек?</td>
-        <td>Начало действия квоты</td>
-        <td>Конец действия квоты</td>
+        <td>Количество свободных мест</td>
+        <td>Дата</td>
         <td>Действия с квотой</td>
         </thead>
         <tbody>
@@ -34,7 +45,6 @@
                 <td>{{ $quota->dep_id }}</td>
                 <td>{{ $quota->qtty }}</td>
                 <td>{{ date("d.m.y", strtotime($quota->date_start)) }}</td>
-                <td>{{ date("d.m.y", strtotime($quota->date_end ))}}</td>
                 <td ><a  href="{{action('quotasController@edit', $quota->id)}}"><img src="" alt="редактировать"></a>
                     <form method="post" class="delete_form" action="{{action('quotasController@destroy', $quota->id)}}">
                         {{csrf_field()}}

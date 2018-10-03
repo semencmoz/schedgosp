@@ -4,7 +4,7 @@
     <!--Правый сайдбар-->
     <div class="w3-sidebar w3-bar-block w3-border" style="width:25%;right:0">
         <h5 class="w3-bar-item">Действия</h5>
-        <a href="/depts" class="w3-bar-item w3-button w3-hover-green">Вернуться к списку квот</a>
+        <a href="/quotas" class="w3-bar-item w3-button w3-hover-green">Вернуться к списку квот</a>
     </div>
     <!--Правый сайдбар-->
 @endsection
@@ -42,11 +42,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="date_start">Дата начала</label>
+                    <label for="date_start">Дата</label>
                     <input type="date" name="date" class="form-control" value="<?php echo date('Y-m-d'); ?>" />
                 </div>
                 <div class="form-group">
-                    <input type="submit" class="btn btn-primary" />
+                    <input type="submit" class="btn btn-primary" value="Создать" />
                 </div>
             </form>
         </div>

@@ -45,14 +45,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="date_start">Дата начала</label>
-                    <input type="date" name="date_start" class="form-control" value="<?php echo date('Y-m-d',strtotime($quota->date_start)); ?>" />
+                    <label for="date_start">Дата</label>
+                    <input type="date" name="date" class="form-control" value="<?php echo date('Y-m-d',strtotime($quota->date)); ?>" />
                 </div>
 
-                <div class="form-group">
-                    <label for="date_end">Дата конца</label>
-                    <input type="date" name="date_end" class="form-control" value="<?php echo date('Y-m-d',strtotime($quota->date_end)); ?>" />
-                </div>
                 <div class="form-group">
                     <input type="submit" class="btn btn-primary" />
                 </div>

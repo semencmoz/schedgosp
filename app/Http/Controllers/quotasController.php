@@ -54,7 +54,7 @@ class quotasController extends Controller
         $quota = new quotas([
             'dep_id' => $request->get('dep_id'),
             'qtty' => $request->get('qtty'),
-            'date' => $request->get('date_start'),
+            'date' => $request->get('date'),
             'qttyused' => 0
         ]);
         if ($quota->save()){
@@ -109,25 +109,29 @@ class quotasController extends Controller
         $this->validate($request,[
             'dep_id'=>'required',
             'qtty'=>'required',
-            'date_start'=>'required',
-            'date_end'=>'required'
+            'date'=>'required',
         ]);
         //отправляем данные в базу
         $quota = \App\quotas::find($id);
+        $qtty = $request->get('qtty');
+        if ($quota->qttyused > $qtty){
+            $depts =  \App\depts::all();
+            return view('quotas.editquotas', compact('quota','id'), ['alldepts' =>$depts, 'success' => 'Количество мест не может быть меньше, чем количество уже запланировыанных госпитализаций']);
+        }
         $quota->dep_id = $request->get('dep_id');
-        $quota->qtty = $request->get('qtty');
-        $quota->date_start = $request->get('date_start');
-        $quota->date_end = $request->get('date_end');
+        $quota->qtty = $qtty;
+        $quota->date = $request->get('date');
         if ($quota->save()){
             $quotas = \App\quotas::all();
-            foreach($quotas as $quota){
-                $quota = \App\depts::find($quota->dep_id);
-                $quota->dep_id = $quota->name;
+            foreach ($quotas as $quota){
+                $dept = \App\depts::find($quota->dep_id);
+                $quota->dep_id = $dept->name;
             }
-            return view('quotas.viewquotas', ['allquotas' => $quotas, 'success' => 'Квота успешно изменена']);
+            $depts =  \App\depts::all();
+            return view('quotas.viewquotas', ['alldepts' =>$depts,'allquotas' => $quotas, 'success' => 'Квота успешно изменена']);
         }
         else{
-            return view('quotas.createquotas');
+            return view('quotas.editquotas', [ 'success' => 'Создание квоты не вышло']);
         }
     }
 
@@ -145,7 +149,8 @@ class quotasController extends Controller
             $dept = \App\depts::find($quota->dep_id);
             $quota->dep_id = $dept->name;
         }
-        return view('quotas.viewquotas', ['allquotas' => $quotas, 'success' => 'Квота успешно удалена']);
+        $depts =  \App\depts::all();
+        return view('quotas.viewquotas', ['allquotas' => $quotas, 'success' => 'Квота успешно удалена', 'alldepts' =>$depts]);
     }
     /**
      * Display the specified resource.

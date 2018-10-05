@@ -23,7 +23,8 @@ class listingsController extends Controller
             $dept = \App\depts::find($listing->dep_id);
             $listing->dep_id = $dept->name;
         }
-        return view('listings.viewlistings', ['alllistings' => $listings]);
+        $depts =  \App\depts::all();
+        return view('listings.viewlistings', ['alllistings' => $listings, 'alldepts' =>$depts]);
     }
 
     /**
@@ -49,6 +50,7 @@ class listingsController extends Controller
             'dep_id'=>'required',
             'patient_name'=>'required',
             'in_date'=>'required',
+            'phone'=>'required',
         ]);
         //отправляем данные в базу
 
@@ -181,36 +183,32 @@ class listingsController extends Controller
     * есть ли квоты на данную дату
     * есть ли квоты для данного отделения
     */
-    public function get_avaliableQuota($date_in,$id,$dep_id){
+    public function get_avaliableQuota($date_in,$id,$dep_id){//date_in - дата поступления; $id - если больше 0, айди записи, что мы редактируем ; dep_id - департамент
         /*берём список квот для даты и отееления*/
-        $res=\App\quotas::where('date_start','<=',$date_in)->where('date_end','>=',$date_in)->where('dep_id',$dep_id)->get();
+        //$res=\App\quotas::where('date_start','<=',$date_in)->
+        //where('date_end','>=',$date_in)->where('dep_id',$dep_id)->get();//изменения в БД
+
+        //если мы редактируем запись
+        if ($id>0)
+            return (\App\listings::find($id))->quota_id;// если на квота, которую мы создали не забита планами, то всё норм
+
+        $res=\App\quotas::where('date_start',$date_in)->where('dep_id',$dep_id)->get();
 
         if (!isset($res)) return null; //если у отделения нет квот на данную дату, возвращаем ноль
         if (count($res)==1) {//если квота одна, возвращаем её
-            if ($id<0){//если мы создаём запись с нуля
-                if (\App\listings::where('quota_id', $res->first()->id)->count() < $res->first()->qtty)
-                    return $res->first()->id; // если на квота, которую мы создали не забита планами, то всё норм
+                $res1=$res->first();
+                if ($res1->qtty > $res1->qttyused)
+                    return $res1->id; // если на квота, которую мы создали не забита планами, то всё норм
                 else return null;//иначе возвращаем ноль
-            }
-            else{//если мы редактируем запись
-                if (\App\listings::where('quota_id', $res->first()->id)->where('id','!=',$id)->count() < $res->first()->qtty)
-                    return $res->first()->id;// если на квота, которую мы создали не забита планами, то всё норм
-                else return null;//иначе возвращаем ноль
-            }
         }
         $viable = array();
         //если квот, которые можно открыть на данную дату для данного отделения несколько, фильтруем их
         // и возвращаем одну
         foreach ($res as $quota){
             //если запись создаётся с нуля, возвращаем для квоты количество доступных записей
-            if ($id<0) $am_listings = \App\listings::where('quota_id', $quota->id)->count();
-            else{
-                //если запись редактируется, то возвращаем количество доступных записей исключая ту, которую редактируем
-                $am_listings = \App\listings::where('quota_id', $quota->id)->where('id','!=',$id)->count();
-            }
-            if($am_listings < $quota->qtty)
+            if($quota->qttyused < $quota->qtty)
                 //если запись на эту квоуу доступна, добавляем квоту в список с количеством доступных для квоты записей
-                $viable = array_add($viable, $quota->id, $am_listings);
+                $viable = array_add($viable, $quota->id, $quota->qttyused);
         }
 
         if (count($viable)<1) return null; //если в списке нет доступных записей, то возвращаем ноль

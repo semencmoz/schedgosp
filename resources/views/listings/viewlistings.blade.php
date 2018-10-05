@@ -19,11 +19,26 @@
         </div>
     @endif
 
-    <h1>Список плановых госпитализаций</h1>
+    <h1>Список записей</h1>
+    <div id="filters">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <select id="deptid" name="dep_id">
+            @foreach ($alldepts as $dept)
+                <option value="{{ $dept->id }}">{{ $dept->name }}</option>
+            @endforeach
+        </select>
+        <div id="calendar1-wrapper1"></div>
+
+    </div>
+
+    <script type="application/javascript" defer="defer">
+        $(document).ready(initDatePicker());
+    </script>
     <table class="comicGreen">
         <thead>
         <td>Подразделение</td>
         <td>Имя пациента</td>
+        <td>Телефон</td>
         <td>Дата поступления</td>
         </thead>
         <tbody>
@@ -31,6 +46,7 @@
             <tr>
                 <td>{{ $listing->dep_id }}</td>
                 <td>{{ $listing->patient_name }}</td>
+                <td>{{ $listing->phone }}</td>
                 <td>{{ date("d.m.y", strtotime($listing->in_date)) }}</td>
                 <td ><a  href="{{action('listingsController@edit', $listing->id)}}"><img src="" alt="редактировать"></a>
                     <form method="post" class="delete_form" action="{{action('listingsController@destroy', $listing->id)}}">

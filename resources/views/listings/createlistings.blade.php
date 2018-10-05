@@ -42,6 +42,13 @@
                 </div>
 
                 <div class="form-group">
+                    <input type="tel" id="phone" name="phone"
+                           placeholder="8 901-23-45-678"
+                           pattern="[0-9]{1} [0-9]{3}-[0-9]{2}-[0-9]{2}-[0-9]{3}"
+                           required />
+                </div>
+
+                <div class="form-group">
                     <label for="date_start">Дата планируемой госпитализации</label>
                     <input type="date" name="in_date" class="form-control" value="<?php echo date('Y-m-d'); ?>" />
                 </div>

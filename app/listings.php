@@ -10,6 +10,7 @@ class listings extends Model
         'dep_id',
         'patient_name',
         'in_date',
-        'quota_id'
+        'quota_id',
+        'phone'
     ];
 }

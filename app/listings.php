@@ -11,6 +11,7 @@ class listings extends Model
         'patient_name',
         'in_date',
         'quota_id',
-        'phone'
+        'phone',
+        'signed_off'
     ];
 }

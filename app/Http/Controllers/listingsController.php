@@ -23,7 +23,7 @@ class listingsController extends Controller
             $dept = \App\depts::find($listing->dep_id);
             $listing->dep_id = $dept->name;
         }
-        $depts =  \App\depts::all();
+        $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
         return view('listings.viewlistings', ['alllistings' => $listings, 'alldepts' =>$depts]);
     }
 
@@ -34,7 +34,7 @@ class listingsController extends Controller
      */
     public function create()
     {
-        $depts =  \App\depts::all();
+        $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
         return view('listings.createlistings',['alldepts' =>$depts]);
     }
 
@@ -73,14 +73,20 @@ class listingsController extends Controller
             'patient_name' => $request->get('patient_name'),
             'in_date' => $request->get('in_date'),
             'quota_id' => $quota_id,
+            'phone' => $request->get('phone'),
+            'signed_off' => false
         ]);
         if ($listing->save()){
+            $quota = \App\quotas::find($listing->quota_id);
+            $quota->qttyused++;
+            $quota->save();
             $listings = \App\listings::all();
             foreach ($listings as $listing){
                 $dept = \App\depts::find($listing->dep_id);
                 $listing->dep_id = $dept->name;
             }
-            return view('listings.viewlistings', ['alllistings' => $listings, 'success' => 'Плановая госпитализация создана']);
+            $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
+            return view('listings.viewlistings', ['alllistings' => $listings, 'success' => 'Плановая госпитализация создана','alldepts' =>$depts]);
         }
         else{
             return view('listings.createlistings');
@@ -109,7 +115,7 @@ class listingsController extends Controller
         $listing = listings::find($id);
         $dept = \App\depts::find($listing->dep_id);
         $listing->dep_id = $dept->name;
-        $depts =  \App\depts::all();
+        $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
         return view('listings.editlistings', compact('listing','id'), ['alldepts' =>$depts]);
     }
 
@@ -126,6 +132,7 @@ class listingsController extends Controller
             'dep_id'=>'required',
             'patient_name'=>'required',
             'in_date'=>'required',
+            'phone'=>'required',
         ]);
         //отправляем данные в базу
 
@@ -149,13 +156,15 @@ class listingsController extends Controller
         $listing->patient_name = $request->get('patient_name');
         $listing->in_date = $request->get('in_date');
         $listing->quota_id = $quota_id;
+        $listing->phone = $request->get('phone');
         if ($listing->save()){
             $listings = \App\listings::all();
             foreach($listings as $listing){
                 $listing = \App\depts::find($listing->dep_id);
                 $listing->dep_id = $listing->name;
             }
-            return view('listings.viewlistings', ['alllistings' => $listings, 'success' => 'Госпитализация успешно изменена']);
+            $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
+            return view('listings.viewlistings', ['alllistings' => $listings, 'success' => 'Госпитализация успешно изменена','alldepts' =>$depts]);
         }
         else{
             return view('listings.createlistings');
@@ -170,13 +179,17 @@ class listingsController extends Controller
      */
     public function destroy($id)
     {
+        $quota = \App\quotas::find((\App\listings::find($id)->quota_id));
+        $quota->qttyused--;
+        $quota->save();
         \App\listings::destroy($id);
         $listings = \App\listings::all();
         foreach($listings as $listing){
             $dept = \App\depts::find($listing->dep_id);
             $listing->dep_id = $dept->name;
         }
-        return view('listings.viewlistings', ['alllistings' => $listings, 'success' => 'Госпитализация успешно удалена']);
+        $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
+        return view('listings.viewlistings', ['alllistings' => $listings, 'success' => 'Госпитализация успешно удалена','alldepts' =>$depts]);
     }
 
     /*функция для валидации введённых параметров квот -
@@ -192,7 +205,7 @@ class listingsController extends Controller
         if ($id>0)
             return (\App\listings::find($id))->quota_id;// если на квота, которую мы создали не забита планами, то всё норм
 
-        $res=\App\quotas::where('date_start',$date_in)->where('dep_id',$dep_id)->get();
+        $res=\App\quotas::where('date',$date_in)->where('dep_id',$dep_id)->get();
 
         if (!isset($res)) return null; //если у отделения нет квот на данную дату, возвращаем ноль
         if (count($res)==1) {//если квота одна, возвращаем её

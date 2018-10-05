@@ -21,7 +21,7 @@ class quotasController extends Controller
             $dept = \App\depts::find($quota->dep_id);
             $quota->dep_id = $dept->name;
         }
-        $depts =  \App\depts::all();
+        $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
         return view('quotas.viewquotas', ['allquotas' => $quotas, 'alldepts' =>$depts]);
     }
 
@@ -32,7 +32,7 @@ class quotasController extends Controller
      */
     public function create()
     {
-        $depts =  \App\depts::all();
+        $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
         return view('quotas.createquotas',['alldepts' =>$depts]);
     }
 
@@ -63,7 +63,7 @@ class quotasController extends Controller
                 $dept = \App\depts::find($quota->dep_id);
                 $quota->dep_id = $dept->name;
             }
-            $depts =  \App\depts::all();
+            $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
             return view('quotas.viewquotas', ['allquotas' => $quotas, 'success' => 'Квота создана', 'alldepts' =>$depts]);
         }
         else{
@@ -93,7 +93,7 @@ class quotasController extends Controller
         $quota = quotas::find($id);
         $dept = \App\depts::find($quota->dep_id);
         $quota->dep_id = $dept->name;
-        $depts =  \App\depts::all();
+        $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
         return view('quotas.editquotas', compact('quota','id'), ['alldepts' =>$depts]);
     }
 
@@ -115,7 +115,7 @@ class quotasController extends Controller
         $quota = \App\quotas::find($id);
         $qtty = $request->get('qtty');
         if ($quota->qttyused > $qtty){
-            $depts =  \App\depts::all();
+            $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
             return view('quotas.editquotas', compact('quota','id'), ['alldepts' =>$depts, 'success' => 'Количество мест не может быть меньше, чем количество уже запланировыанных госпитализаций']);
         }
         $quota->dep_id = $request->get('dep_id');
@@ -127,7 +127,7 @@ class quotasController extends Controller
                 $dept = \App\depts::find($quota->dep_id);
                 $quota->dep_id = $dept->name;
             }
-            $depts =  \App\depts::all();
+            $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
             return view('quotas.viewquotas', ['alldepts' =>$depts,'allquotas' => $quotas, 'success' => 'Квота успешно изменена']);
         }
         else{
@@ -149,7 +149,7 @@ class quotasController extends Controller
             $dept = \App\depts::find($quota->dep_id);
             $quota->dep_id = $dept->name;
         }
-        $depts =  \App\depts::all();
+        $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
         return view('quotas.viewquotas', ['allquotas' => $quotas, 'success' => 'Квота успешно удалена', 'alldepts' =>$depts]);
     }
     /**

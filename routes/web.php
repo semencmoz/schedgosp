@@ -22,3 +22,6 @@ Route::post('/listings/ajpost','listingsController@ajpost');
 
 Route::resource('/quotas','quotasController');
 Route::post('/quotas/ajpost','quotasController@ajpost');
+
+Auth::routes();
+Route::get('/home', 'HomeController@index')->name('home');

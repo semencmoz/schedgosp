@@ -111,13 +111,17 @@ class quotasController extends Controller
             'qtty'=>'required',
             'date'=>'required',
         ]);
-        //отправляем данные в базу
         $quota = \App\quotas::find($id);
         $qtty = $request->get('qtty');
-        if ($quota->qttyused > $qtty){
-            $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
-            return view('quotas.editquotas', compact('quota','id'), ['alldepts' =>$depts, 'success' => 'Количество мест не может быть меньше, чем количество уже запланировыанных госпитализаций']);
-        }
+        if ($quota->qttyused<$qtty){
+            $error = \Illuminate\Validation\ValidationException::withMessages(
+                [
+                'Нет свободных квот' => 'Квот на указанную дату либо нет, либо они закончились',
+                ]
+                );
+            throw $error;
+            }
+        //отправляем данные в базу
         $quota->dep_id = $request->get('dep_id');
         $quota->qtty = $qtty;
         $quota->date = $request->get('date');

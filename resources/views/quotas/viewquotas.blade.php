@@ -42,7 +42,7 @@
         <td>Дата</td>
         <td>Действия с квотой</td>
         </thead>
-        <tbody>
+        <tbody id="clearableQuotas">
         @foreach ($allquotas as $quota)
             <tr>
                 <td>{{ $quota->dep_id }}</td>

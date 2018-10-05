@@ -18,6 +18,7 @@ Route::get('/', function () {
 Route::resource('/roles','rolesController');
 Route::resource('/depts','deptsController');
 Route::resource('/listings','listingsController');
+Route::post('/listings/ajpost','listingsController@ajpost');
 
 Route::resource('/quotas','quotasController');
 Route::post('/quotas/ajpost','quotasController@ajpost');

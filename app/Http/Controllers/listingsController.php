@@ -192,6 +192,18 @@ class listingsController extends Controller
         return view('listings.viewlistings', ['alllistings' => $listings, 'success' => 'Госпитализация успешно удалена','alldepts' =>$depts]);
     }
 
+    public function ajpost(Request $request)
+    {
+
+        $response = \App\listings::where('in_date',$request->date)->where('dep_id',$request->dep_id)->get();
+        foreach($response as $listing){
+            $dept = \App\depts::find($listing->dep_id);
+            $listing->dep_id = $dept->name;
+            $listing->in_date = date("d.m.y", strtotime($listing->in_date));
+        }
+        return response()->json(['listings'=>$response->toJson()]);
+    }
+
     /*функция для валидации введённых параметров квот -
     * есть ли квоты на данную дату
     * есть ли квоты для данного отделения
@@ -232,6 +244,5 @@ class listingsController extends Controller
             reset($viable);//ставим указатель на первый эеемент
             return key($viable);//возвращаем ключ(айди квоты) первого элемента массива
         }
-
     }
 }

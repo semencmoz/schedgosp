@@ -41,7 +41,7 @@
         <td>Телефон</td>
         <td>Дата поступления</td>
         </thead>
-        <tbody>
+        <tbody id="clearableListings">
         @foreach ($alllistings as $listing)
             <tr>
                 <td>{{ $listing->dep_id }}</td>

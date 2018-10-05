@@ -160,7 +160,13 @@ class quotasController extends Controller
      */
     public function ajpost(Request $request)
     {
+
         $response = \App\quotas::where('date',$request->date)->where('dep_id',$request->dep_id)->get();
-        if (isset($response)) return response()->json(['querys'=>$response->toJson()]);
+        foreach($response as $quota){
+        $dept = \App\depts::find($quota->dep_id);
+        $quota->dep_id = $dept->name;
+        $quota->date = date("d.m.y", strtotime($quota->date));
+    }
+        return response()->json(['querys'=>$response->toJson()]);
     }
 }

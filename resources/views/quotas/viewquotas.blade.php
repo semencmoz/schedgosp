@@ -49,11 +49,11 @@
                 <td>{{ $quota->qtty }}</td>
                 <td>{{ $quota->qttyused }}</td>
                 <td>{{ date("d.m.y", strtotime($quota->date)) }}</td>
-                <td ><a  href="{{action('quotasController@edit', $quota->id)}}"><img src="" alt="редактировать"></a>
+                <td ><a  href="{{action('quotasController@edit', $quota->id)}}"><img class="edtblt" src="/images/edit.png" alt="редактировать"></a>
                     <form method="post" class="delete_form" action="{{action('quotasController@destroy', $quota->id)}}">
                         {{csrf_field()}}
                         <input type="hidden" name="_method" value="DELETE" />
-                        <button type="submit">Удалить</button>
+                        <input class="edtblt" type="image" src="/images/delete.png" alt="Submit">
                     </form></td>
             </tr>
         @endforeach

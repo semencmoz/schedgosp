@@ -143,7 +143,20 @@ class quotasController extends Controller
      */
     public function destroy($id)
     {
+        $quotaToDelete =\App\quotas::find($id);
+        if($quotaToDelete->qttyused>0){
+
+            $quotas = \App\quotas::all();
+            foreach($quotas as $quota){
+                $dept = \App\depts::find($quota->dep_id);
+                $quota->dep_id = $dept->name;
+            }
+            $depts =  \App\depts::where('id','<>',1)->where('id','<>',5)->get();
+            return view('quotas.viewquotas', ['allquotas' => $quotas, 'success' => 'В квоте есть занятые места, сначала удалите записи по квоте', 'alldepts' =>$depts]);
+        }
+
         \App\quotas::destroy($id);
+
         $quotas = \App\quotas::all();
         foreach($quotas as $quota){
             $dept = \App\depts::find($quota->dep_id);

@@ -1,4 +1,4 @@
-function initDatePicker(){
+    function initDatePicker(){
     new datepicker({
         dom:document.getElementById('calendar1-wrapper1'),
         mode: 'ru',
@@ -58,7 +58,12 @@ function BuildListings(queryResults){
             line=line+'<td>'+item.patient_name+'</td>';
             line=line+'<td>'+item.phone+'</td>';
             line=line+'<td>'+item.in_date+'</td>';
-            line=line+'<td>'+'</td>';
+                line+='<td>';
+                line+='<a href="http://schedgosp.todkb.local/listings/'+item.id+'/edit"><img class="edtblt" src="/images/edit.png" alt="редактировать"></a>';
+                line+='<form method="post" class="delete_form" action="http://schedgosp.todkb.local/listings/'+item.id+'">';
+                line+='<input name="_token" value="'+$('meta[name="csrf-token"]').attr('content')+'" type="hidden">';
+                line+='<input name="_method" value="DELETE" type="hidden"><input class="edtblt" type="image" src="/images/delete.png" alt="Submit"></form>';
+                line+='</td>';
             line+='</tr>';
             html_dt+=line;
         });
@@ -77,7 +82,12 @@ function BuildQuotas(queryResults){
             line=line+'<td>'+item.qtty+'</td>';
             line=line+'<td>'+item.qttyused+'</td>';
             line=line+'<td>'+item.date+'</td>';
-            line=line+'<td>'+'</td>';
+                line+='<td>';
+                line+='<a href="http://schedgosp.todkb.local/quotas/'+item.id+'/edit"><img class="edtblt" src="/images/edit.png" alt="редактировать"></a>';
+                line+='<form method="post" class="delete_form" action="http://schedgosp.todkb.local/quotas/'+item.id+'">';
+                line+='<input name="_token" value="'+$('meta[name="csrf-token"]').attr('content')+'" type="hidden">';
+                line+='<input name="_method" value="DELETE" type="hidden"><input class="edtblt" type="image" src="/images/delete.png" alt="Submit"></form>';
+                line+='</td>';
             line+='</tr>';
             html_dt+=line;
         });
